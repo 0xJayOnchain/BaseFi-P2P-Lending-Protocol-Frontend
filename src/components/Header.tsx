@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import NotificationModal from "./NotificationModal";
+import LoadingSpinner from "./LoadingSpinner";
 declare global {
   interface Window {
     ethereum?: any;
@@ -59,6 +60,7 @@ function WalletSection() {
   const [balance, setBalance] = useState<string | null>(null);
   const [chainId, setChainId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const BASE_SEPOLIA_ID = 84532;
 
@@ -66,10 +68,10 @@ function WalletSection() {
 
   const connect = async () => {
     setError(null);
+    setLoading(true);
     try {
       if (!window.ethereum) {
-        setError("No wallet found. Please install MetaMask.");
-        return;
+        throw new Error("No wallet found. Please install MetaMask.");
       }
       const provider = new ethers.BrowserProvider(window.ethereum as any);
       await provider.send("eth_requestAccounts", []);
@@ -96,7 +98,7 @@ function WalletSection() {
               }],
             });
           } else {
-            setError("Please switch to Base Sepolia.");
+            throw new Error("Please switch to Base Sepolia.");
           }
         }
       }
@@ -123,8 +125,9 @@ function WalletSection() {
         } catch {}
       });
     } catch (e: any) {
-      setError(e?.message ?? "Failed to connect wallet.");
+      setError(e.message ?? "Failed to connect wallet.");
     }
+    setLoading(false);
   };
 
   const disconnect = () => {
@@ -135,6 +138,7 @@ function WalletSection() {
 
   return (
     <div className="flex items-center gap-2">
+      <LoadingSpinner open={loading} />
       {address ? (
         <>
           <span className="text-sm muted-text">
