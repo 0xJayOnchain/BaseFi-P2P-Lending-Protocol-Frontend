@@ -1,0 +1,101 @@
+[
+  { "type": "function", "name": "createLendingOffer", "inputs": [
+    {"name":"lendToken","type":"address"},
+    {"name":"amount","type":"uint256"},
+    {"name":"interestRateBPS","type":"uint256"},
+    {"name":"durationSecs","type":"uint256"},
+    {"name":"collateralToken","type":"address"},
+    {"name":"collateralRatioBPS","type":"uint256"}
+  ], "outputs": [{"type":"uint256"}], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "cancelLendingOffer", "inputs": [{"name":"offerId","type":"uint256"}], "outputs": [], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "createBorrowRequest", "inputs": [
+    {"name":"borrowToken","type":"address"},
+    {"name":"amount","type":"uint256"},
+    {"name":"maxInterestRateBPS","type":"uint256"},
+    {"name":"durationSecs","type":"uint256"},
+    {"name":"collateralToken","type":"address"},
+    {"name":"collateralAmount","type":"uint256"}
+  ], "outputs": [{"type":"uint256"}], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "cancelBorrowRequest", "inputs": [{"name":"requestId","type":"uint256"}], "outputs": [], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "acceptOfferByBorrower", "inputs": [
+    {"name":"offerId","type":"uint256"},
+    {"name":"collateralAmount","type":"uint256"}
+  ], "outputs": [{"type":"uint256"}], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "acceptRequestByLender", "inputs": [{"name":"requestId","type":"uint256"}], "outputs": [{"type":"uint256"}], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "repayFull", "inputs": [{"name":"loanId","type":"uint256"}], "outputs": [], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "repayFullWithSwap", "inputs": [
+    {"name":"loanId","type":"uint256"},
+    {"name":"router","type":"address"},
+    {"name":"amountIn","type":"uint256"},
+    {"name":"path","type":"address[]"},
+    {"name":"amountOutMin","type":"uint256"},
+    {"name":"deadline","type":"uint256"}
+  ], "outputs": [], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "liquidate", "inputs": [{"name":"loanId","type":"uint256"}], "outputs": [], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "liquidateWithSwap", "inputs": [
+    {"name":"loanId","type":"uint256"},
+    {"name":"router","type":"address"},
+    {"name":"path","type":"address[]"},
+    {"name":"amountOutMin","type":"uint256"},
+    {"name":"deadline","type":"uint256"}
+  ], "outputs": [], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "accruedInterest", "inputs": [{"name":"loanId","type":"uint256"}], "outputs": [{"type":"uint256"}], "stateMutability": "view" },
+  { "type": "function", "name": "getLoan", "inputs": [{"name":"loanId","type":"uint256"}], "outputs": [
+    {"type":"tuple","components":[
+      {"name":"borrower","type":"address"},
+      {"name":"lender","type":"address"},
+      {"name":"lendToken","type":"address"},
+      {"name":"collateralToken","type":"address"},
+      {"name":"principal","type":"uint256"},
+      {"name":"interestRateBPS","type":"uint256"},
+      {"name":"durationSecs","type":"uint256"},
+      {"name":"startTime","type":"uint256"},
+      {"name":"collateralAmount","type":"uint256"},
+      {"name":"status","type":"uint8"}
+    ]}
+  ], "stateMutability": "view" },
+  { "type": "function", "name": "claimOwnerFees", "inputs": [{"name":"token","type":"address"}], "outputs": [], "stateMutability": "nonpayable" },
+  { "type": "function", "name": "claimOwnerFeesBatch", "inputs": [{"name":"tokens","type":"address[]"}], "outputs": [], "stateMutability": "nonpayable" },
+
+  { "type": "event", "name": "LendingOfferCreated", "inputs": [
+    {"indexed": true, "name":"id", "type":"uint256"},
+    {"indexed": true, "name":"lender", "type":"address"},
+    {"indexed": true, "name":"lendToken", "type":"address"},
+    {"indexed": false, "name":"amount", "type":"uint256"}
+  ] },
+  { "type": "event", "name": "BorrowRequestCreated", "inputs": [
+    {"indexed": true, "name":"id", "type":"uint256"},
+    {"indexed": true, "name":"borrower", "type":"address"},
+    {"indexed": true, "name":"collateralToken", "type":"address"},
+    {"indexed": false, "name":"collateralAmount", "type":"uint256"}
+  ] },
+  { "type": "event", "name": "LoanMatched", "inputs": [
+    {"indexed": true, "name":"loanId", "type":"uint256"},
+    {"indexed": true, "name":"borrower", "type":"address"},
+    {"indexed": true, "name":"lender", "type":"address"},
+    {"indexed": false, "name":"lendToken", "type":"address"},
+    {"indexed": false, "name":"collateralToken", "type":"address"},
+    {"indexed": false, "name":"principal", "type":"uint256"},
+    {"indexed": false, "name":"interestRateBPS", "type":"uint256"},
+    {"indexed": false, "name":"durationSecs", "type":"uint256"},
+    {"indexed": false, "name":"startTime", "type":"uint256"}
+  ] },
+  { "type": "event", "name": "LoanClosed", "inputs": [
+    {"indexed": true, "name":"loanId", "type":"uint256"},
+    {"indexed": false, "name":"status", "type":"string"},
+    {"indexed": false, "name":"actor", "type":"address"}
+  ] },
+  { "type": "event", "name": "RepayWithSwap", "inputs": [
+    {"indexed": true, "name":"loanId", "type":"uint256"},
+    {"indexed": true, "name":"router", "type":"address"},
+    {"indexed": true, "name":"tokenIn", "type":"address"},
+    {"indexed": false, "name":"amountIn", "type":"uint256"},
+    {"indexed": false, "name":"amountOut", "type":"uint256"}
+  ] },
+  { "type": "event", "name": "LoanLiquidated", "inputs": [
+    {"indexed": true, "name":"loanId", "type":"uint256"},
+    {"indexed": true, "name":"liquidator", "type":"address"},
+    {"indexed": false, "name":"collateralToLiquidator", "type":"uint256"},
+    {"indexed": false, "name":"penaltyCollateral", "type":"uint256"}
+  ] }
+]

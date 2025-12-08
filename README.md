@@ -9,7 +9,7 @@ A modern React/Next.js interface for the BaseFi peer-to-peer lending protocol de
 - ethers.js v6
 - TailwindCSS
 - Toast notifications (react-hot-toast)
-- Base Onchain Kit (`@coinbase/onchainkit`) for wallet/connect UX
+// Wallet/connect UX implemented with ethers.js
 
 ## Network & Contracts (Base Sepolia)
 
@@ -61,12 +61,11 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - MetaMask recommended; ensure you’re on Base Sepolia (ChainId 84532)
 - If on the wrong network, the app will prompt a switch
 
-### Base Onchain Kit Integration
+### Wallet Connection (ethers.js)
 
-- Package: `@coinbase/onchainkit` (already installed)
-- Provides prebuilt wallet connect components, network management, and utilities
-- We’ll use it for the connect button and chain switching on Base Sepolia, combined with ethers.js for contract interactions
-- Docs: https://onchainkit.xyz/
+- Implemented with `ethers.BrowserProvider` and MetaMask
+- Chain validation/switch to Base Sepolia via `wallet_switchEthereumChain`
+- Displays connected address and ETH balance in header
 
 ### Scripts
 

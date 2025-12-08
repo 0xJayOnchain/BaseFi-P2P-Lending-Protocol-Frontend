@@ -24,8 +24,8 @@ Round 1 — Config, ABIs, Wallet
 [ ] Create config & ABI modules
     - src/config/constants.ts
     - src/abi/{LendingPool.json, LoanPositionNFT.json, PriceOracle.json, ERC20.json}
-[ ] Implement wallet connection flow (Base Onchain Kit)
-    - Use @coinbase/onchainkit connect components
+[ ] Implement wallet connection flow (ethers.js)
+    - Use ethers BrowserProvider (MetaMask)
     - Connect/disconnect, Base Sepolia check/switch, address + balance display
 [ ] Add basic layout & theme
     - Base blue accent (#0052FF), responsive
@@ -33,8 +33,8 @@ Round 1 — Config, ABIs, Wallet
     - Tailwind `dark` class with localStorage persistence
 [ ] Toast notifications
     - Pending, success, error
-[ ] Document Base Onchain Kit usage in README
-    - Add setup notes and links
+[ ] Document wallet connection in README
+    - ethers.js approach, network switching
 
 ==================================================
 Round 2 — Lender Dashboard (MVP)

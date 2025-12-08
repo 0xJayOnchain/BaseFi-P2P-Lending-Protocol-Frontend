@@ -1,0 +1,3 @@
+[
+  { "type": "function", "name": "getNormalizedPrice", "inputs": [{"name":"token","type":"address"}], "outputs": [{"type":"uint256"}], "stateMutability": "view" }
+]
