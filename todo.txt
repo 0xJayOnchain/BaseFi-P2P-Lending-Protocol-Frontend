@@ -1,0 +1,95 @@
+# BaseFi Frontend Todo
+# Strategy: Work in rounds. Complete all tasks in a round before moving to the next.
+# Mark progress by replacing [ ] with [x] and add notes or links under each task as needed.
+
+==================================================
+Round 0 — Planning & Foundations
+==================================================
+[ ] Confirm project goals & scope
+    - MVP features: wallet connect, lender/borrower dashboards, loan details, approvals, transaction flows
+[ ] Decide architecture & libraries
+    - Next.js + React hooks + Context
+    - ethers.js v6
+    - TailwindCSS + (optional) Headless UI
+    - react-hot-toast for notifications
+    - Optional: ENS, WalletConnect later
+[ ] Define pages & routes
+    - / (home), /lender, /borrower, /loan/[id]
+    - Optional phase-2: /offers, /requests, /nfts
+
+==================================================
+Round 1 — Config, ABIs, Wallet
+==================================================
+[ ] Create config & ABI modules
+    - src/config/constants.ts
+    - src/abi/{LendingPool.json, LoanPositionNFT.json, PriceOracle.json, ERC20.json}
+[ ] Implement wallet connection flow (Base Onchain Kit)
+    - Use @coinbase/onchainkit connect components
+    - Connect/disconnect, Base Sepolia check/switch, address + balance display
+[ ] Add basic layout & theme
+    - Base blue accent (#0052FF), responsive
+[ ] Toast notifications
+    - Pending, success, error
+[ ] Document Base Onchain Kit usage in README
+    - Add setup notes and links
+
+==================================================
+Round 2 — Lender Dashboard (MVP)
+==================================================
+[ ] Create Lending Offer (with token approval)
+[ ] View My Offers (list + cancel)
+[ ] View My Loans (as lender)
+[ ] Liquidation actions (standard + swap)
+[ ] Owner fees (if user is owner) — claim single/batch
+
+==================================================
+Round 3 — Borrower Dashboard (MVP)
+==================================================
+[ ] Browse active offers (basic filters)
+[ ] Accept offer (with collateral approval)
+[ ] Create Borrow Request
+[ ] View My Requests (cancel)
+[ ] View My Loans (as borrower)
+[ ] Repay (standard + swap)
+
+==================================================
+Round 4 — Loan Details & Real-Time
+==================================================
+[ ] Loan details page
+    - Full info: principal, interest (real-time accrual), duration, collateral, status
+    - Roles & actions (repay/liquidate)
+[ ] Event listeners & caching
+    - LendingOfferCreated, LoanMatched, LoanClosed
+    - Basic memoization
+[ ] Utilities
+    - Interest calc, time formatting, error mapping
+
+==================================================
+Round 5 — Polish, Testing, Deploy
+==================================================
+[ ] UI/UX polish
+    - Loading states, empty/error states, mobile responsiveness
+[ ] Light/Dark mode toggle
+    - Theme switcher persisted in local storage
+[ ] Testing & validation
+    - Manual checklist + basic tests; verify flows on Base Sepolia
+[ ] Build & deploy
+    - npm run build works, deploy guide (Vercel/Netlify), env vars doc
+
+==================================================
+References
+==================================================
+Network (Base Sepolia): chainId 84532 | RPC https://sepolia.base.org | Explorer https://sepolia.basescan.org
+Contracts:
+- LendingPool:     0xE5cEdb79960ea461D778A130Da9cD279CD575331
+- PriceOracle:     0x428EeAD1456C43EaA2BfF10E71509f2cCbAA5fFf
+- LoanPositionNFT: 0x950E723c8C75F925e5DB0aE388371621634920d0
+Whitelisted Router:
+- Uniswap V3 SwapRouter: 0x94cC0AaC535CCDB3C01d6787D6413C739ae12bc4
+Tokens:
+- WETH (18): 0x4200000000000000000000000000000000000006 | Feed: 0x4aDC67696bA383F43DD60A9e78F2C97Fbbfc7cb1
+
+Notes:
+- Prefer ethers.js v6 API
+- Approval flows are required for ERC20 token movements to the LendingPool
+- Show both BPS and % for interest (e.g., 500 BPS = 5%)
