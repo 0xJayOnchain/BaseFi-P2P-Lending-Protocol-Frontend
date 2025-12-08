@@ -25,6 +25,8 @@ Contract addresses:
 
 Supported tokens (initial):
 - WETH (18): `0x4200000000000000000000000000000000000006` | Chainlink Feed: `0x4aDC67696bA383F43DD60A9e78F2C97Fbbfc7cb1`
+ - USDC (6): Sepolia address TBD
+ - cbBTC (8): Sepolia address TBD
 
 ## Features (MVP)
 
@@ -78,6 +80,7 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - Interest rates displayed in BPS and % (e.g., 500 BPS = 5%)
 - Transaction toasts show pending/success/error with explorer links
 - Light/Dark mode: simple theme toggle with persistence (planned)
+	- Tailwind `dark` class + localStorage persistence
 
 ## Roadmap (High-Level)
 
