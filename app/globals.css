@@ -17,25 +17,6 @@
   --btn-primary-text: #ffffff;
 }
 
-/* Removed @theme inline due to build error; using CSS variables directly */
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --border: #374151; /* gray-700 */
-    --muted: #d1d5db; /* gray-300 */
-    --btn-bg: #1f2937; /* gray-800 */
-    --btn-text: #f3f4f6; /* gray-100 */
-    --btn-border: #374151; /* gray-700 */
-    /* Dark mode palette */
-    --primary-1: #211C84; /* rgb(33, 28, 132) */
-    --primary-2: #4D55CC; /* rgb(77, 85, 204) */
-    --primary-3: #7A73D1; /* rgb(122, 115, 209) */
-    --primary-4: #B5A8D5; /* rgb(181, 168, 213) */
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -43,7 +24,7 @@ body {
 }
 
 /* Explicit dark mode class overrides to centralize theme control */
-.dark {
+html.dark, :root.dark {
   --background: #0a0a0a;
   --foreground: #ededed;
   --border: #374151;
@@ -72,7 +53,7 @@ body {
   color: var(--btn-primary-text);
 }
 
-.dark .btn-primary {
+html.dark .btn-primary, :root.dark .btn-primary {
   background-color: var(--primary-2);
 }
 
