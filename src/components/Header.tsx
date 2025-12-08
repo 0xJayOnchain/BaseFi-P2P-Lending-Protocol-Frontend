@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import NotificationModal from "./NotificationModal";
 declare global {
   interface Window {
     ethereum?: any;
@@ -148,7 +149,13 @@ function WalletSection() {
         <span className="text-xs text-red-600">Wrong network: please switch to Base Sepolia</span>
       )}
       {error && (
-        <span className="text-xs text-red-600">{error}</span>
+        <NotificationModal
+        open={!!error}
+        title="Wallet Connection Error"
+        message={error}
+        variant="error"
+        onClose={() => setError(null)}
+      />
       )}
     </div>
   );
