@@ -12,7 +12,6 @@
     "playwright:headless": "playwright test"
   },
   "dependencies": {
-    "@synthetixio/synpress": "^4.1.1",
     "ethers": "^6.16.0",
     "next": "16.0.7",
     "react": "^19.2.1",
