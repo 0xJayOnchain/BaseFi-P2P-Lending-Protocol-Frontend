@@ -76,6 +76,13 @@ Round 5 — Polish, Testing, Deploy
     - Theme switcher persisted in local storage
 [ ] Testing & validation
     - Manual checklist + basic tests; verify flows on Base Sepolia
+    - Unit tests to add (saved for later):
+      - Home page renders title and navigation links
+      - Header renders title, theme toggle, and toggles `html.dark` on click
+      - Borrower page sections and actions render (Browse Offers, Create Request, My Loans)
+      - Lender page sections and actions render (Create Offer, My Offers, My Loans)
+      - Utility: address shortener returns `0x1234…abcd` format
+      - Optional: mock ethers BrowserProvider and test wallet connect flow error handling
 [ ] Build & deploy
     - npm run build works, deploy guide (Vercel/Netlify), env vars doc
 
