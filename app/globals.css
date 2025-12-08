@@ -86,11 +86,11 @@ body {
 
 /* Link styling */
 .link {
-  color: var(--primary-2);
+  color: var(--btn-primary-text);
   text-decoration: none;
 }
 .link:hover {
-  color: var(--primary-3);
+  color: var(--btn-primary-text);
   text-decoration: underline;
 }
 .link:active {
