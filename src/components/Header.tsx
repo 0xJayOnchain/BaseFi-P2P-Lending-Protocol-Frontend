@@ -3,27 +3,34 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import NotificationModal from "./NotificationModal";
 import LoadingSpinner from "./LoadingSpinner";
+// Minimal EIP-1193 provider interface
+interface Eip1193Provider {
+  request: (args: { method: string; params?: unknown[] | Record<string, unknown> }) => Promise<unknown>;
+  on?: (event: string, listener: (...args: unknown[]) => void) => void;
+}
 declare global {
   interface Window {
-    ethereum?: any;
+    ethereum?: Eip1193Provider;
   }
 }
 
 export default function Header() {
-  const [theme, setTheme] = useState<string | null>(null);
-
-  useEffect(() => {
+  // Initialize theme from localStorage without setting state in an effect
+  const [theme, setTheme] = useState<string>(() => {
     try {
       const saved = localStorage.getItem("theme");
-      if (saved === "dark") {
-        document.documentElement.classList.add("dark");
-        setTheme("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-        setTheme("light");
-      }
-    } catch {}
-  }, []);
+      return saved === "dark" ? "dark" : "light";
+    } catch {
+      return "light";
+    }
+  });
+
+  // Reflect theme value to the DOM class
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "dark") root.classList.add("dark");
+    else root.classList.remove("dark");
+  }, [theme]);
 
   const toggleTheme = () => {
     const root = document.documentElement;
@@ -73,21 +80,22 @@ function WalletSection() {
       if (!window.ethereum) {
         throw new Error("No wallet found. Please install MetaMask.");
       }
-      const provider = new ethers.BrowserProvider(window.ethereum as any);
+      const provider = new ethers.BrowserProvider(window.ethereum as unknown as ethers.Eip1193Provider);
       await provider.send("eth_requestAccounts", []);
       const network = await provider.getNetwork();
       setChainId(Number(network.chainId));
       // Switch to Base Sepolia if needed
       if (Number(network.chainId) !== BASE_SEPOLIA_ID) {
         try {
-          await (window.ethereum as any).request({
+          await window.ethereum.request({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: "0x14A74" /* 84532 hex */ }],
           });
-        } catch (switchErr: any) {
+        } catch (switchErr: unknown) {
           // If chain not added, attempt add
-          if (switchErr?.code === 4902) {
-            await (window.ethereum as any).request({
+          const code = (switchErr as { code?: number } | null)?.code;
+          if (code === 4902) {
+            await window.ethereum.request({
               method: "wallet_addEthereumChain",
               params: [{
                 chainId: "0x14A74",
@@ -109,7 +117,7 @@ function WalletSection() {
       setBalance(ethers.formatEther(bal));
 
       // Listen for chain/account changes
-      (window.ethereum as any).on?.("accountsChanged", async () => {
+      window.ethereum.on?.("accountsChanged", async () => {
         try {
           const signer = await provider.getSigner();
           const addr = await signer.getAddress();
@@ -118,7 +126,7 @@ function WalletSection() {
           setBalance(ethers.formatEther(bal));
         } catch {}
       });
-      (window.ethereum as any).on?.("chainChanged", async () => {
+      window.ethereum.on?.("chainChanged", async () => {
         try {
           const network = await provider.getNetwork();
           setChainId(Number(network.chainId));
