@@ -15,15 +15,19 @@ declare global {
 }
 
 export default function Header() {
-  // Initialize theme from localStorage without setting state in an effect
-  const [theme, setTheme] = useState<string>(() => {
+  // Default theme is light to keep SSR and initial client render consistent.
+  // Read localStorage on mount to avoid hydration mismatch.
+  const [theme, setTheme] = useState<string>("light");
+
+  // On mount, sync theme from localStorage (if any)
+  useEffect(() => {
     try {
       const saved = localStorage.getItem("theme");
-      return saved === "dark" ? "dark" : "light";
-    } catch {
-      return "light";
-    }
-  });
+      if (saved === "dark" || saved === "light") {
+        setTheme(saved);
+      }
+    } catch {}
+  }, []);
 
   // Reflect theme value to the DOM class
   useEffect(() => {
