@@ -74,6 +74,7 @@ function WalletSection() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const BASE_SEPOLIA_ID = 84532;
+  const BASE_SEPOLIA_HEX = "0x14A34"; // 84532 in hex
 
   const shortAddr = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
@@ -93,7 +94,7 @@ function WalletSection() {
         try {
           await window.ethereum.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: "0x14A74" /* 84532 hex */ }],
+            params: [{ chainId: BASE_SEPOLIA_HEX }],
           });
         } catch (switchErr: unknown) {
           // If chain not added, attempt add
@@ -102,7 +103,7 @@ function WalletSection() {
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
               params: [{
-                chainId: "0x14A74",
+                chainId: BASE_SEPOLIA_HEX,
                 chainName: "Base Sepolia",
                 rpcUrls: ["https://sepolia.base.org"],
                 nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
@@ -147,6 +148,54 @@ function WalletSection() {
     setBalance(null);
     setError(null);
   };
+
+  // On mount, restore wallet state if the user already authorized the site.
+  useEffect(() => {
+    const restore = async () => {
+      try {
+        if (!window.ethereum) return;
+        const provider = new ethers.BrowserProvider(window.ethereum as unknown as ethers.Eip1193Provider);
+        // Get current chain id
+        try {
+          const chainHex = await window.ethereum.request({ method: "eth_chainId" }) as string;
+          if (typeof chainHex === "string") {
+            setChainId(parseInt(chainHex, 16));
+          }
+        } catch {}
+
+        // Check if accounts already available (authorized)
+        const accounts = await window.ethereum.request({ method: "eth_accounts" }) as string[];
+        if (accounts && accounts.length > 0) {
+          const addr = accounts[0];
+          setAddress(addr);
+          try {
+            const bal = await provider.getBalance(addr);
+            setBalance(ethers.formatEther(bal));
+          } catch {}
+
+          // Attach listeners once we have a provider
+          window.ethereum.on?.("accountsChanged", async (accs: unknown) => {
+            try {
+              const list = accs as string[];
+              const next = Array.isArray(list) && list.length ? list[0] : null;
+              setAddress(next);
+              if (next) {
+                const bal = await provider.getBalance(next);
+                setBalance(ethers.formatEther(bal));
+              } else {
+                setBalance(null);
+              }
+            } catch {}
+          });
+          window.ethereum.on?.("chainChanged", (hexId: unknown) => {
+            const hex = typeof hexId === "string" ? hexId : undefined;
+            if (hex) setChainId(parseInt(hex, 16));
+          });
+        }
+      } catch {}
+    };
+    restore();
+  }, []);
 
   return (
     <div className="flex items-center gap-2">
